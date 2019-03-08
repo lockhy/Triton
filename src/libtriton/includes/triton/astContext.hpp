@@ -69,6 +69,9 @@ namespace triton {
         //! Destructor
         TRITON_EXPORT ~AstContext();
 
+        //! Clear
+        TRITON_EXPORT void clear(void);
+
         //! Operator
         TRITON_EXPORT AstContext& operator=(const AstContext& other);
 

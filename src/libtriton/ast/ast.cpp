@@ -35,8 +35,28 @@ namespace triton {
     }
 
 
+    //! A list used by the garbage collector to determine what AbstractNode must be deleted.
+    std::set<triton::ast::SharedAbstractNode> cleanupAbstractNode;
+
     AbstractNode::~AbstractNode() {
-      /* virtual */
+      std::list<triton::ast::SharedAbstractNode> W;
+
+      for (auto&& n : this->getChildren()) {
+        W.push_back(n);
+      }
+
+      while (!W.empty()) {
+        auto& node = W.back();
+        W.pop_back();
+
+        for (auto&& n : node->getChildren()) {
+          W.push_back(n);
+        }
+
+        if (node.use_count() == 1) {
+          cleanupAbstractNode.insert(node);
+        }
+      }
     }
 
 

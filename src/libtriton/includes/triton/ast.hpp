@@ -669,6 +669,9 @@ namespace triton {
     //! Returns a deque of collected matched nodes via a depth-first pre order traversal.
     TRITON_EXPORT std::deque<SharedAbstractNode> lookingForNodes(const SharedAbstractNode& node, triton::ast::ast_e match=ANY_NODE);
 
+    //! A list used by the garbage collector to determine what AbstractNode must be deleted.
+    extern std::set<triton::ast::SharedAbstractNode> cleanupAbstractNode;
+
   /*! @} End of ast namespace */
   };
 /*! @} End of triton namespace */

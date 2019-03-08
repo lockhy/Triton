@@ -19,6 +19,7 @@ namespace triton {
   namespace engines {
     namespace symbolic {
 
+
       SymbolicEngine::SymbolicEngine(triton::arch::Architecture* architecture,
                                      const triton::modes::SharedModes& modes,
                                      const triton::ast::SharedAstContext& astCtxt,
@@ -62,6 +63,34 @@ namespace triton {
       }
 
 
+      SymbolicEngine::~SymbolicEngine() {
+        bool stop = false;
+
+        /*
+         * Before calling the GC, we have to clear all data structures which
+         * may contain shared_ptr.
+         */
+        this->astCtxt->clear();
+        this->alignedMemoryReference.clear();
+        this->memoryReference.clear();
+        this->symbolicReg.clear();
+        this->pathConstraints.clear();
+
+        /* Garbage collect while it's needed */
+        while (stop == false) {
+          stop = true;
+          while (triton::engines::symbolic::cleanupSymbolicExpressions.size()) {
+            this->garbageCollect();
+            stop = false;
+          }
+          while (triton::ast::cleanupAbstractNode.size()) {
+            this->garbageCollect();
+            stop = false;
+          }
+        }
+      }
+
+
       SymbolicEngine& SymbolicEngine::operator=(const SymbolicEngine& other) {
         triton::engines::symbolic::SymbolicSimplification::operator=(other);
         triton::engines::symbolic::PathManager::operator=(other);
@@ -81,6 +110,18 @@ namespace triton {
         this->uniqueSymVarId              = other.uniqueSymVarId;
 
         return *this;
+      }
+
+
+      void SymbolicEngine::garbageCollect(void) {
+        std::set<triton::ast::SharedAbstractNode> tmpAst;
+        std::set<triton::engines::symbolic::SharedSymbolicExpression> tmpExpr;
+
+        std::swap(tmpAst, triton::ast::cleanupAbstractNode);
+        std::swap(tmpExpr, triton::engines::symbolic::cleanupSymbolicExpressions);
+
+        tmpAst.clear();
+        tmpExpr.clear();
       }
 
 
@@ -295,6 +336,10 @@ namespace triton {
       SharedSymbolicExpression SymbolicEngine::newSymbolicExpression(const triton::ast::SharedAbstractNode& node, triton::engines::symbolic::expression_e type, const std::string& comment) {
         /* Each symbolic expression must have an unique id */
         triton::usize id = this->getUniqueSymExprId();
+
+        /* Garbage collect unused symbolic expressions */
+        if (id % 100 == 0)
+          this->garbageCollect();
 
         /* Performes transformation if there are rules recorded */
         const triton::ast::SharedAbstractNode& snode = this->processSimplification(node);

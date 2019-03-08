@@ -45,6 +45,11 @@ namespace triton {
     }
 
 
+    void AstContext::clear(void) {
+      this->valueMapping.clear();
+    }
+
+
     SharedAbstractNode AstContext::assert_(const SharedAbstractNode& expr) {
       SharedAbstractNode node = std::make_shared<AssertNode>(expr);
       if (node == nullptr)

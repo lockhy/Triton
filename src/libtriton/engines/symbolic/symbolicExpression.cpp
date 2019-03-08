@@ -8,6 +8,7 @@
 #include <iosfwd>
 #include <string>
 #include <sstream>
+#include <algorithm>
 
 #include <triton/ast.hpp>
 #include <triton/astContext.hpp>
@@ -42,6 +43,29 @@ namespace triton {
         this->originMemory   = other.originMemory;
         this->originRegister = other.originRegister;
         this->type           = other.type;
+      }
+
+
+      //! A list used by the garbage collector to determine what SymbolicExpression must be deleted.
+      std::set<triton::engines::symbolic::SharedSymbolicExpression> cleanupSymbolicExpressions;
+
+      SymbolicExpression::~SymbolicExpression() {
+        std::list<triton::ast::SharedAbstractNode> W{this->ast};
+
+        while (!W.empty()) {
+          auto& node = W.back();
+          W.pop_back();
+
+          for (auto&& n : node->getChildren())
+            W.push_back(n);
+
+          if (node->getType() == triton::ast::REFERENCE_NODE) {
+            auto& expr = reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression();
+            if (expr.use_count() == 1) {
+              cleanupSymbolicExpressions.insert(expr);
+            }
+          }
+        }
       }
 
 

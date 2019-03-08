@@ -147,6 +147,9 @@ namespace triton {
           //! Returns the AST corresponding to the extend operation. Mainly used for AArch64 operands.
           triton::ast::SharedAbstractNode getExtendAst(triton::arch::aarch64::extend_e type, triton::uint32 size, const triton::ast::SharedAbstractNode& node);
 
+          //! This method garbage collects unused symbolic expressions.
+          void garbageCollect(void);
+
         public:
           //! Constructor.
           TRITON_EXPORT SymbolicEngine(triton::arch::Architecture* architecture,
@@ -156,6 +159,9 @@ namespace triton {
 
           //! Constructor by copy.
           TRITON_EXPORT SymbolicEngine(const SymbolicEngine& other);
+
+          //! Destructor.
+          TRITON_EXPORT ~SymbolicEngine();
 
           //! Copies a SymbolicEngine.
           TRITON_EXPORT SymbolicEngine& operator=(const SymbolicEngine& other);

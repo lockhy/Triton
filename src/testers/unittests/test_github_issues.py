@@ -93,3 +93,25 @@ class TestIssue673(unittest.TestCase):
         self.assertEqual(len(inst.getUndefinedRegisters()), 1)
         self.assertEqual(len(inst.getReadRegisters()), 2)
         self.assertEqual(len(inst.getWrittenRegisters()), 4)
+
+
+
+class TestIssue753(unittest.TestCase):
+
+    """Testing #753."""
+
+    def setUp(self):
+        """Define the arch."""
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
+        self.ctx.convertRegisterToSymbolicVariable(self.ctx.registers.rax)
+
+
+    def test_issue(self):
+        # Create a huge AST where all children are dependent of its parent
+        for _ in range(0x5000):
+            inst = Instruction(b"\x48\x01\xc0") # add rax, rax
+            self.ctx.processing(inst)
+        # Resetting the triton context will remove all symbolic expressions
+        # and so imply a deep recursive destruction of shared_ptr.
+        self.assertEqual(self.ctx.reset(), None)
