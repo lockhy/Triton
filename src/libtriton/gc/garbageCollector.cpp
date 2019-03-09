@@ -65,32 +65,32 @@ namespace triton {
 
 
     void GarbageCollector::collect(triton::engines::symbolic::SymbolicExpression* expr) {
-      std::list<triton::ast::SharedAbstractNode> W{expr->getAst()};
+      //std::list<triton::ast::SharedAbstractNode> W{expr->getAst()};
 
-      while (!W.empty()) {
-        auto& node = W.back();
-        W.pop_back();
+      //while (!W.empty()) {
+      //  auto& node = W.back();
+      //  W.pop_back();
 
-        for (auto&& n : node->getChildren())
-          W.push_back(n);
+      //  for (auto&& n : node->getChildren())
+      //    W.push_back(n);
 
-        if (node->getType() == triton::ast::REFERENCE_NODE) {
-          const auto& expr = reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression();
-          if (expr.use_count() == 1) {
-            this->m2.lock();
-            this->expressions.insert(expr);
-            this->m2.unlock();
-          }
-        }
-      }
+      //  if (node->getType() == triton::ast::REFERENCE_NODE) {
+      //    const auto& expr = reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression();
+      //    if (expr.use_count() == 1) {
+      //      this->m2.lock();
+      //      this->expressions.insert(expr);
+      //      this->m2.unlock();
+      //    }
+      //  }
+      //}
     }
 
 
     void GarbageCollector::threadRelease(void) {
       /* This loop is processed in a thread while GarbageCollector is alive */
       while (this->end == false) {
-        //std::this_thread::sleep_for(std::chrono::seconds(1));
-        this->releaseAll();
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        this->release();
       }
     }
 
