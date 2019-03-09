@@ -72,6 +72,9 @@ namespace triton {
         //! Collects an SymbolicExpression.
         TRITON_EXPORT void collect(triton::engines::symbolic::SymbolicExpression* expr);
 
+        //! Release garbages until there is nothing to release anymore.
+        TRITON_EXPORT void releaseAll(void);
+
         //! Releases the current collected garbages.
         TRITON_EXPORT void release(void);
     };

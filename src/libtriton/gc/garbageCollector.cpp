@@ -28,9 +28,7 @@ namespace triton {
 
 
     GarbageCollector::~GarbageCollector() {
-      bool stop = false;
-
-      std::cout << "> ~GarbageCollector" << std::endl;
+      //std::cout << "> ~GarbageCollector" << std::endl;
 
       /* Tell to the thread that we are going to dead */
       this->end = true;
@@ -40,22 +38,8 @@ namespace triton {
       this->t.join();
       #endif
 
-      /*
-       * This part of the code is processed in order to release garbages
-       * until there is nothing to release anymore.
-       */
-      while (stop == false) {
-        stop = true;
-        while (this->expressions.size()) {
-          this->release();
-          stop = false;
-        }
-        while (this->nodes.size()) {
-          this->release();
-          stop = false;
-        }
-      }
-      std::cout << "< ~GarbageCollector" << std::endl;
+      this->releaseAll();
+      //std::cout << "< ~GarbageCollector" << std::endl;
     }
 
 
@@ -110,6 +94,27 @@ namespace triton {
       while (this->end == false) {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         this->release();
+      }
+    }
+
+
+    void GarbageCollector::releaseAll(void) {
+      bool stop = false;
+
+      /*
+       * This part of the code is processed in order to release garbages
+       * until there is nothing to release anymore.
+       */
+      while (stop == false) {
+        stop = true;
+        while (this->expressions.size()) {
+          this->release();
+          stop = false;
+        }
+        while (this->nodes.size()) {
+          this->release();
+          stop = false;
+        }
       }
     }
 

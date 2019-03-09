@@ -7,6 +7,7 @@
 
 #include <triton/api.hpp>
 #include <triton/exceptions.hpp>
+#include <triton/garbageCollector.hpp>
 
 #include <list>
 #include <map>
@@ -232,9 +233,9 @@ namespace triton {
 
 
   API::~API() {
-    std::cout << "> ~API" << std::endl;
+    //std::cout << "> ~API" << std::endl;
     this->removeEngines();
-    std::cout << "< ~API" << std::endl;
+    //std::cout << "< ~API" << std::endl;
   }
 
 
@@ -479,6 +480,9 @@ namespace triton {
 
     // Clean up the registers shortcut
     this->registers.clear();
+
+    // Release garbages
+    triton::gc::gcInstance.releaseAll();
   }
 
 
