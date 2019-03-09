@@ -28,7 +28,7 @@ namespace triton {
 
 
     GarbageCollector::~GarbageCollector() {
-      //std::cout << "> ~GarbageCollector" << std::endl;
+      std::cout << "> ~GarbageCollector" << std::endl;
 
       /* Tell to the thread that we are going to dead */
       this->end = true;
@@ -39,7 +39,7 @@ namespace triton {
       #endif
 
       this->releaseAll();
-      //std::cout << "< ~GarbageCollector" << std::endl;
+      std::cout << "< ~GarbageCollector" << std::endl;
     }
 
 
@@ -68,7 +68,7 @@ namespace triton {
 
 
     void GarbageCollector::collect(triton::engines::symbolic::SymbolicExpression* expr) {
-      std::list<triton::ast::SharedAbstractNode> W{std::move(expr->getAst())};
+      std::list<triton::ast::SharedAbstractNode> W{expr->getAst()};
 
       while (!W.empty()) {
         auto& node = W.back();
