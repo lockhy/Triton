@@ -89,8 +89,8 @@ namespace triton {
     void GarbageCollector::threadRelease(void) {
       /* This loop is processed in a thread while GarbageCollector is alive */
       while (this->end == false) {
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        this->release();
+        //std::this_thread::sleep_for(std::chrono::seconds(1));
+        this->releaseAll();
       }
     }
 
