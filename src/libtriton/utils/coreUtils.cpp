@@ -66,4 +66,3 @@ namespace triton {
 
   }; /* utils namespace */
 }; /* triton namespace */
-

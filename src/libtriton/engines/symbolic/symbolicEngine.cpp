@@ -8,10 +8,11 @@
 #include <cstring>
 #include <new>
 
-#include <triton/exceptions.hpp>
-#include <triton/coreUtils.hpp>
-#include <triton/symbolicEngine.hpp>
 #include <triton/astContext.hpp>
+#include <triton/coreUtils.hpp>
+#include <triton/exceptions.hpp>
+#include <triton/garbageCollector.hpp>
+#include <triton/symbolicEngine.hpp>
 
 
 
@@ -64,30 +65,11 @@ namespace triton {
 
 
       SymbolicEngine::~SymbolicEngine() {
-        bool stop = false;
-
-        /*
-         * Before calling the GC, we have to clear all data structures which
-         * may contain shared_ptr.
-         */
         this->astCtxt->clear();
         this->alignedMemoryReference.clear();
         this->memoryReference.clear();
         this->symbolicReg.clear();
         this->pathConstraints.clear();
-
-        /* Garbage collect while it's needed */
-        while (stop == false) {
-          stop = true;
-          while (triton::engines::symbolic::cleanupSymbolicExpressions.size()) {
-            this->garbageCollect();
-            stop = false;
-          }
-          while (triton::ast::cleanupAbstractNode.size()) {
-            this->garbageCollect();
-            stop = false;
-          }
-        }
       }
 
 
@@ -110,18 +92,6 @@ namespace triton {
         this->uniqueSymVarId              = other.uniqueSymVarId;
 
         return *this;
-      }
-
-
-      void SymbolicEngine::garbageCollect(void) {
-        std::set<triton::ast::SharedAbstractNode> tmpAst;
-        std::set<triton::engines::symbolic::SharedSymbolicExpression> tmpExpr;
-
-        std::swap(tmpAst, triton::ast::cleanupAbstractNode);
-        std::swap(tmpExpr, triton::engines::symbolic::cleanupSymbolicExpressions);
-
-        tmpAst.clear();
-        tmpExpr.clear();
       }
 
 
@@ -337,9 +307,9 @@ namespace triton {
         /* Each symbolic expression must have an unique id */
         triton::usize id = this->getUniqueSymExprId();
 
-        /* Garbage collect unused symbolic expressions */
+        /* Release unused symbolic expressions and nodes */
         if (id % 100 == 0)
-          this->garbageCollect();
+          triton::gc::gcInstance.release();
 
         /* Performes transformation if there are rules recorded */
         const triton::ast::SharedAbstractNode& snode = this->processSimplification(node);

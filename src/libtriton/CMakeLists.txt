@@ -94,6 +94,7 @@ set(LIBTRITON_SOURCE_FILES
     engines/symbolic/symbolicSimplification.cpp
     engines/symbolic/symbolicVariable.cpp
     engines/taint/taintEngine.cpp
+    gc/garbageCollector.cpp
     modes/modes.cpp
     os/unix/syscallNumberToString.cpp
     utils/coreUtils.cpp
