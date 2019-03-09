@@ -28,8 +28,6 @@ namespace triton {
 
 
     GarbageCollector::~GarbageCollector() {
-      std::cout << "> ~GarbageCollector" << std::endl;
-
       /* Tell to the thread that we are going to dead */
       this->end = true;
 
@@ -39,7 +37,6 @@ namespace triton {
       }
 
       this->releaseAll();
-      std::cout << "< ~GarbageCollector" << std::endl;
     }
 
 
