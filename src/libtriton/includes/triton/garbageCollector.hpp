@@ -9,6 +9,7 @@
 #define TRITON_GARBAGE_COLLECTOR_HPP
 
 #include <chrono>
+#include <memory>
 #include <mutex>
 #include <set>
 #include <thread>
@@ -79,8 +80,8 @@ namespace triton {
         TRITON_EXPORT void release(void);
     };
 
-    //! The global garbage collector instance used while the library is alive.
-    extern GarbageCollector gcInstance;
+    //! Shared Garbage Collector
+    using SharedGarbageCollector = std::shared_ptr<triton::gc::GarbageCollector>;
 
   /*! @} End of gc namespace */
   };

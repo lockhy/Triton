@@ -15,10 +15,6 @@
 namespace triton {
   namespace gc {
 
-    /* The global garbage collector instance used while the library is alive. */
-    GarbageCollector gcInstance;
-
-
     GarbageCollector::GarbageCollector() {
       this->end = false;
       #if !defined(IS_PINTOOL)
@@ -65,24 +61,24 @@ namespace triton {
 
 
     void GarbageCollector::collect(triton::engines::symbolic::SymbolicExpression* expr) {
-      //std::list<triton::ast::SharedAbstractNode> W{expr->getAst()};
+      std::list<triton::ast::SharedAbstractNode> W{expr->getAst()};
 
-      //while (!W.empty()) {
-      //  auto& node = W.back();
-      //  W.pop_back();
+      while (!W.empty()) {
+        auto& node = W.back();
+        W.pop_back();
 
-      //  for (auto&& n : node->getChildren())
-      //    W.push_back(n);
+        for (auto&& n : node->getChildren())
+          W.push_back(n);
 
-      //  if (node->getType() == triton::ast::REFERENCE_NODE) {
-      //    const auto& expr = reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression();
-      //    if (expr.use_count() == 1) {
-      //      this->m2.lock();
-      //      this->expressions.insert(expr);
-      //      this->m2.unlock();
-      //    }
-      //  }
-      //}
+        if (node->getType() == triton::ast::REFERENCE_NODE) {
+          const auto& expr = reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression();
+          if (expr.use_count() == 1) {
+            this->m2.lock();
+            this->expressions.insert(expr);
+            this->m2.unlock();
+          }
+        }
+      }
     }
 
 

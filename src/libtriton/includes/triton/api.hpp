@@ -14,6 +14,7 @@
 #include <triton/astRepresentation.hpp>
 #include <triton/callbacks.hpp>
 #include <triton/dllexport.hpp>
+#include <triton/garbageCollector.hpp>
 #include <triton/immediate.hpp>
 #include <triton/instruction.hpp>
 #include <triton/irBuilder.hpp>
@@ -48,6 +49,9 @@ namespace triton {
 
         //! The modes.
         triton::modes::SharedModes modes;
+
+        //! The garbage collector.
+        triton::gc::SharedGarbageCollector gc;
 
         //! The taint engine.
         triton::engines::taint::TaintEngine* taint = nullptr;

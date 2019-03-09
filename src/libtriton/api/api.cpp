@@ -7,7 +7,6 @@
 
 #include <triton/api.hpp>
 #include <triton/exceptions.hpp>
-#include <triton/garbageCollector.hpp>
 
 #include <list>
 #include <map>
@@ -228,7 +227,8 @@ namespace triton {
 
   API::API() : callbacks(*this), arch(&this->callbacks) {
     this->modes   = std::make_shared<triton::modes::Modes>();
-    this->astCtxt = std::make_shared<triton::ast::AstContext>(this->modes);
+    this->gc      = std::make_shared<triton::gc::GarbageCollector>();
+    this->astCtxt = std::make_shared<triton::ast::AstContext>(this->modes, this->gc);
   }
 
 
@@ -470,17 +470,17 @@ namespace triton {
       this->taint     = nullptr;
     }
 
-    // Use default modes.
+    // Use default modes
     this->modes = std::make_shared<triton::modes::Modes>();
 
-    // Clean up the ast context
-    this->astCtxt = std::make_shared<triton::ast::AstContext>(this->modes);
+    // New garbage collector
+    this->gc = std::make_shared<triton::gc::GarbageCollector>();
+
+    // New AST context
+    this->astCtxt = std::make_shared<triton::ast::AstContext>(this->modes, this->gc);
 
     // Clean up the registers shortcut
     this->registers.clear();
-
-    // Release garbages
-    triton::gc::gcInstance.releaseAll();
   }
 
 

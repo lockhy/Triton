@@ -18,14 +18,15 @@
 namespace triton {
   namespace ast {
 
-    AstContext::AstContext(const triton::modes::SharedModes& modes)
-      : modes(modes) {
+    AstContext::AstContext(const triton::modes::SharedModes& modes, const triton::gc::SharedGarbageCollector& gc)
+      : modes(modes), gc(gc) {
     }
 
 
     AstContext::AstContext(const AstContext& other)
       : std::enable_shared_from_this<AstContext>(other),
         modes(other.modes),
+        gc(other.gc),
         astRepresentation(other.astRepresentation),
         valueMapping(other.valueMapping) {
     }
@@ -38,9 +39,12 @@ namespace triton {
 
     AstContext& AstContext::operator=(const AstContext& other) {
       std::enable_shared_from_this<AstContext>::operator=(other);
+
       this->astRepresentation = other.astRepresentation;
-      this->modes = other.modes;
-      this->valueMapping = other.valueMapping;
+      this->gc                = other.gc;
+      this->modes             = other.modes;
+      this->valueMapping      = other.valueMapping;
+
       return *this;
     }
 

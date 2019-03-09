@@ -309,7 +309,7 @@ namespace triton {
 
         #if defined(IS_PINTOOL)
         /* Release unused symbolic expressions and nodes */
-        triton::gc::gcInstance.releaseAll();
+        //triton::gc::gcInstance.releaseAll();
         #endif
 
         /* Performes transformation if there are rules recorded */

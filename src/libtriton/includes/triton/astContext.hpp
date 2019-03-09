@@ -16,6 +16,7 @@
 #include <triton/astRepresentation.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/exceptions.hpp>
+#include <triton/garbageCollector.hpp>
 #include <triton/modes.hpp>
 
 
@@ -53,6 +54,9 @@ namespace triton {
         //! Modes API
         triton::modes::SharedModes modes;
 
+        //! Garbage Collector
+        triton::gc::SharedGarbageCollector gc;
+
         //! String formater for ast
         triton::ast::representations::AstRepresentation astRepresentation;
 
@@ -61,7 +65,7 @@ namespace triton {
 
       public:
         //! Constructor
-        TRITON_EXPORT AstContext(const triton::modes::SharedModes& modes);
+        TRITON_EXPORT AstContext(const triton::modes::SharedModes& modes, const triton::gc::SharedGarbageCollector& gc);
 
         //! Constructor by copy
         TRITON_EXPORT AstContext(const AstContext& other);
