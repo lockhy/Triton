@@ -33,10 +33,10 @@ namespace triton {
       /* Tell to the thread that we are going to dead */
       this->end = true;
 
-      #if !defined(IS_PINTOOL)
       /* waits for the thread to finish its execution */
-      this->t.join();
-      #endif
+      if (this->t.joinable()) {
+        t.join();
+      }
 
       this->releaseAll();
       std::cout << "< ~GarbageCollector" << std::endl;
@@ -92,7 +92,7 @@ namespace triton {
     void GarbageCollector::threadRelease(void) {
       /* This loop is processed in a thread while GarbageCollector is alive */
       while (this->end == false) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(std::chrono::seconds(1));
         this->release();
       }
     }

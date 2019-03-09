@@ -307,8 +307,8 @@ namespace triton {
         /* Each symbolic expression must have an unique id */
         triton::usize id = this->getUniqueSymExprId();
 
-        /* Release unused symbolic expressions and nodes */
         #if defined(IS_PINTOOL)
+        /* Release unused symbolic expressions and nodes */
         triton::gc::gcInstance.releaseAll();
         #endif
 
