@@ -232,7 +232,9 @@ namespace triton {
 
 
   API::~API() {
+    std::cout << "> ~API" << std::endl;
     this->removeEngines();
+    std::cout << "< ~API" << std::endl;
   }
 
 

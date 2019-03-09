@@ -21,18 +21,24 @@ namespace triton {
 
     GarbageCollector::GarbageCollector() {
       this->end = false;
+      #if !defined(IS_PINTOOL)
       this->t = std::thread(&GarbageCollector::threadRelease, this);
+      #endif
     }
 
 
     GarbageCollector::~GarbageCollector() {
       bool stop = false;
 
+      std::cout << "> ~GarbageCollector" << std::endl;
+
       /* Tell to the thread that we are going to dead */
       this->end = true;
 
+      #if !defined(IS_PINTOOL)
       /* waits for the thread to finish its execution */
       this->t.join();
+      #endif
 
       /*
        * This part of the code is processed in order to release garbages
@@ -49,6 +55,7 @@ namespace triton {
           stop = false;
         }
       }
+      std::cout << "< ~GarbageCollector" << std::endl;
     }
 
 
