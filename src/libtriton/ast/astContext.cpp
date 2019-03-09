@@ -26,9 +26,9 @@ namespace triton {
     AstContext::AstContext(const AstContext& other)
       : std::enable_shared_from_this<AstContext>(other),
         modes(other.modes),
-        gc(other.gc),
         astRepresentation(other.astRepresentation),
-        valueMapping(other.valueMapping) {
+        valueMapping(other.valueMapping),
+        gc(other.gc) {
     }
 
 

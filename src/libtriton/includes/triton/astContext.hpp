@@ -54,9 +54,6 @@ namespace triton {
         //! Modes API
         triton::modes::SharedModes modes;
 
-        //! Garbage Collector
-        triton::gc::SharedGarbageCollector gc;
-
         //! String formater for ast
         triton::ast::representations::AstRepresentation astRepresentation;
 
@@ -64,6 +61,9 @@ namespace triton {
         std::map<std::string, std::pair<triton::ast::SharedAbstractNode, triton::uint512>> valueMapping;
 
       public:
+        //! Garbage Collector
+        triton::gc::SharedGarbageCollector gc;
+
         //! Constructor
         TRITON_EXPORT AstContext(const triton::modes::SharedModes& modes, const triton::gc::SharedGarbageCollector& gc);
 
