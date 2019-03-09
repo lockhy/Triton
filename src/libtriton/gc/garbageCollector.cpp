@@ -5,6 +5,9 @@
 **  This program is under the terms of the BSD License.
 */
 
+#include <algorithm>
+#include <utility>
+
 #include <triton/garbageCollector.hpp>
 
 
@@ -21,20 +24,7 @@ namespace triton {
 
 
     GarbageCollector::~GarbageCollector() {
-      bool stop = false;
-
-      /* Garbage collect while it's needed */
-      while (stop == false) {
-        stop = true;
-        while (this->expressions.size()) {
-          this->release();
-          stop = false;
-        }
-        while (this->nodes.size()) {
-          this->release();
-          stop = false;
-        }
-      }
+      this->loopRelease();
     }
 
 
@@ -61,7 +51,7 @@ namespace triton {
 
 
     void GarbageCollector::collect(triton::engines::symbolic::SymbolicExpression* expr) {
-      std::list<triton::ast::SharedAbstractNode> W{expr->getAst()};
+      std::list<triton::ast::SharedAbstractNode> W{std::move(expr->getAst())};
 
       while (!W.empty()) {
         auto& node = W.back();
@@ -71,10 +61,28 @@ namespace triton {
           W.push_back(n);
 
         if (node->getType() == triton::ast::REFERENCE_NODE) {
-          auto& expr = reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression();
+          const auto& expr = reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression();
           if (expr.use_count() == 1) {
             this->expressions.insert(expr);
           }
+        }
+      }
+    }
+
+
+    void GarbageCollector::loopRelease(void) {
+      bool stop = false;
+
+      /* Garbage collect while it's needed */
+      while (stop == false) {
+        stop = true;
+        while (this->expressions.size()) {
+          this->release();
+          stop = false;
+        }
+        while (this->nodes.size()) {
+          this->release();
+          stop = false;
         }
       }
     }
@@ -86,6 +94,9 @@ namespace triton {
 
       std::swap(garbageNodes, this->nodes);
       std::swap(garbageExpressions, this->expressions);
+
+      //std::cout << "Release " << garbageNodes.size() << " nodes" << std::endl;
+      //std::cout << "Release " << garbageExpressions.size() << " expressions" << std::endl;
 
       garbageNodes.clear();
       garbageExpressions.clear();

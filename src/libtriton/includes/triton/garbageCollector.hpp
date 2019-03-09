@@ -53,8 +53,11 @@ namespace triton {
         //! Collects an SymbolicExpression
         TRITON_EXPORT void collect(triton::engines::symbolic::SymbolicExpression* expr);
 
-        //! Releases garbages. It will free unused AbstractNode and SymbolicExpression.
+        //! Releases the current collected garbages.
         TRITON_EXPORT void release(void);
+
+        //! Releases garbages until there is nothing to release anymore.
+        TRITON_EXPORT void loopRelease(void);
     };
 
     //! The global garbage collector instance used while the library is alive.
