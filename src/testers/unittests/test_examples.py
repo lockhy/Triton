@@ -5,7 +5,6 @@ import glob
 import itertools
 import os
 import platform
-import subprocess
 import sys
 import unittest
 
@@ -36,12 +35,14 @@ for i, example in enumerate(itertools.chain(glob.iglob(os.path.join(EXAMPLE_DIR,
             # FIXME: Doesn't work on Travis and Appveyor...
             return
 
-        p = subprocess.Popen([sys.executable, example_name] + args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        out, err = p.communicate()
-        p.wait()
-        p.stdout.close()
-        p.stderr.close()
-        self.assertEqual(p.returncode, 0)
+        if sys.version_info >= (3, 0):
+            import subprocess
+            r, _ = subprocess.getstatusoutput(" ".join([sys.executable, example_name] + args))
+        else:
+            import commands
+            r, _ = commands.getstatusoutput(" ".join([sys.executable, example_name] + args))
+
+        self.assertEqual(r, 0)
 
     # Define an arguments with a default value as default value is capture at
     # lambda creation so that example_name is not in the closure of the lambda
