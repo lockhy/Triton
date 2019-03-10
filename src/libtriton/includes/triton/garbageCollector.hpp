@@ -8,6 +8,7 @@
 #ifndef TRITON_GARBAGE_COLLECTOR_HPP
 #define TRITON_GARBAGE_COLLECTOR_HPP
 
+#include <atomic>
 #include <chrono>
 #include <mutex>
 #include <set>
@@ -39,16 +40,16 @@ namespace triton {
     class GarbageCollector {
       private:
         //! Internal mutex used for nodes.
-        std::mutex m1;
+        std::recursive_mutex m1;
 
         //! Internal mutex used for expressions.
-        std::mutex m2;
+        std::recursive_mutex m2;
 
         //! Internal thread to release garbages.
         std::thread t;
 
         //! This flag is false while GarbageCollector is alive. ~GarbageCollector sets this flag to true.
-        bool end;
+        std::atomic<bool> end;
 
         //! Releases garbages in a thread while GarbageCollector is alive.
         void threadRelease(void);
