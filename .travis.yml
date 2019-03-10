@@ -148,6 +148,7 @@ cache:
   - ccache
 
 before_install:
+  - ulimit -a
   - export CC="$C_COMPILER"
   - export CXX="$CXX_COMPILER"
   # Install pip
