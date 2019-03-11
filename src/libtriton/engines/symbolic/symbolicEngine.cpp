@@ -65,17 +65,17 @@ namespace triton {
 
 
       SymbolicEngine::~SymbolicEngine() {
-        /* Clear all shared_ptr dependencies */
-        this->astCtxt->clear();
-        this->alignedMemoryReference.clear();
-        this->memoryReference.clear();
-        this->symbolicReg.clear();
-        this->pathConstraints.clear();
+        ///* Clear all shared_ptr dependencies */
+        //this->astCtxt->clear();
+        //this->alignedMemoryReference.clear();
+        //this->memoryReference.clear();
+        //this->symbolicReg.clear();
+        //this->pathConstraints.clear();
 
-        /* Removes all shared_ptr garbages */
-        #if !defined(IS_PINTOOL)
-        triton::gc::gcInstance->releaseAll();
-        #endif
+        ///* Removes all shared_ptr garbages */
+        //#if !defined(IS_PINTOOL)
+        //triton::gc::gcInstance->releaseAll();
+        //#endif
       }
 
 

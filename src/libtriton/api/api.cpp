@@ -231,6 +231,7 @@ namespace triton {
     this->astCtxt = std::make_shared<triton::ast::AstContext>(this->modes);
 
     #if !defined(IS_PINTOOL)
+    std::cout << 1 << std::endl;
     if (triton::gc::gcInstance != nullptr) {
       delete triton::gc::gcInstance;
     }
