@@ -155,7 +155,7 @@ namespace triton {
       void MemoryAccess_dealloc(PyObject* self) {
         std::cout << std::flush;
         delete PyMemoryAccess_AsMemoryAccess(self);
-        Py_TYPE(self)->tp_free((PyObject*)self);
+        PyObject_Del(self);
       }
 
 

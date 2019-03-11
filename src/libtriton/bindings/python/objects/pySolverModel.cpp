@@ -87,7 +87,7 @@ namespace triton {
       void SolverModel_dealloc(PyObject* self) {
         std::cout << std::flush;
         delete PySolverModel_AsSolverModel(self);
-        Py_TYPE(self)->tp_free((PyObject*)self);
+        PyObject_Del(self);
       }
 
 

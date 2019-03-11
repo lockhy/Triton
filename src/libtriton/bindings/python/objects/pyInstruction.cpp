@@ -229,7 +229,7 @@ namespace triton {
       void Instruction_dealloc(PyObject* self) {
         std::cout << std::flush;
         delete PyInstruction_AsInstruction(self);
-        Py_TYPE(self)->tp_free((PyObject*)self);
+        PyObject_Del(self);
       }
 
 

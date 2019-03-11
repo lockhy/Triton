@@ -399,7 +399,7 @@ namespace triton {
         if (((TritonContext_Object*)self)->ref == false)
           delete PyTritonContext_AsTritonContext(self);
         Py_XDECREF(((TritonContext_Object*)self)->regAttr);
-        Py_TYPE(self)->tp_free((PyObject*)self);
+        PyObject_Del(self);
       }
 
 
