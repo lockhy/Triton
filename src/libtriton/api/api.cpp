@@ -229,6 +229,14 @@ namespace triton {
   API::API() : callbacks(*this), arch(&this->callbacks) {
     this->modes   = std::make_shared<triton::modes::Modes>();
     this->astCtxt = std::make_shared<triton::ast::AstContext>(this->modes);
+
+    /*
+     * The first instance of an API must allocate only once a GC instance.
+     * This GC instance is used for all API instances.
+     */
+    if (triton::gc::gcInstance == nullptr) {
+      triton::gc::gcInstance = new triton::gc::GarbageCollector();
+    }
   }
 
 
@@ -480,7 +488,7 @@ namespace triton {
     this->registers.clear();
 
     // Release garbages
-    triton::gc::gcInstance.releaseAll();
+    triton::gc::gcInstance->releaseAll();
   }
 
 

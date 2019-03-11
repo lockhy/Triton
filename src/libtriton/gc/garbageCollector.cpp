@@ -16,7 +16,7 @@ namespace triton {
   namespace gc {
 
     /* The global garbage collector instance used while the library is alive. */
-    GarbageCollector gcInstance;
+    GarbageCollector* gcInstance;
 
 
     GarbageCollector::GarbageCollector() {
