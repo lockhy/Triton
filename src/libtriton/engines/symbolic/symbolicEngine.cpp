@@ -308,11 +308,6 @@ namespace triton {
         /* Each symbolic expression must have an unique id */
         triton::usize id = this->getUniqueSymExprId();
 
-        #if defined(IS_PINTOOL)
-        /* Release unused symbolic expressions and nodes */
-        triton::gc::gcInstance.releaseAll();
-        #endif
-
         /* Performes transformation if there are rules recorded */
         const triton::ast::SharedAbstractNode& snode = this->processSimplification(node);
 

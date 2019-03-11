@@ -41,6 +41,7 @@ namespace triton {
 
 
     void GarbageCollector::collect(triton::ast::AbstractNode* node) {
+      #if !defined(IS_PINTOOL)
       std::list<triton::ast::SharedAbstractNode> W;
 
       for (auto&& n : node->getChildren()) {
@@ -61,28 +62,31 @@ namespace triton {
           this->m1.unlock();
         }
       }
+      #endif
     }
 
 
     void GarbageCollector::collect(triton::engines::symbolic::SymbolicExpression* expr) {
-      //std::list<triton::ast::SharedAbstractNode> W{expr->getAst()};
+      #if !defined(IS_PINTOOL)
+      std::list<triton::ast::SharedAbstractNode> W{expr->getAst()};
 
-      //while (!W.empty()) {
-      //  auto& node = W.back();
-      //  W.pop_back();
+      while (!W.empty()) {
+        auto& node = W.back();
+        W.pop_back();
 
-      //  for (auto&& n : node->getChildren())
-      //    W.push_back(n);
+        for (auto&& n : node->getChildren())
+          W.push_back(n);
 
-      //  if (node->getType() == triton::ast::REFERENCE_NODE) {
-      //    const auto& expr = reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression();
-      //    if (expr.use_count() == 1) {
-      //      this->m2.lock();
-      //      this->expressions.insert(expr);
-      //      this->m2.unlock();
-      //    }
-      //  }
-      //}
+        if (node->getType() == triton::ast::REFERENCE_NODE) {
+          const auto& expr = reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression();
+          if (expr.use_count() == 1) {
+            this->m2.lock();
+            this->expressions.insert(expr);
+            this->m2.unlock();
+          }
+        }
+      }
+      #endif
     }
 
 
