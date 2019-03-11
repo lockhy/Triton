@@ -81,7 +81,9 @@ namespace triton {
     };
 
     //! The global garbage collector instance used while the library is alive.
+    #if !defined(IS_PINTOOL)
     extern GarbageCollector* gcInstance;
+    #endif
 
   /*! @} End of gc namespace */
   };
