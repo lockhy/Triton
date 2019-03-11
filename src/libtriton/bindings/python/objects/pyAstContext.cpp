@@ -323,8 +323,10 @@ namespace triton {
 
       //! AstContext destructor.
       void AstContext_dealloc(PyObject* self) {
+        std::cout << std::flush;
         PyAstContext_AsAstContext(self) = nullptr; // decref the shared_ptr
-        Py_TYPE(self)->tp_free((PyObject*)self);
+        //Py_TYPE(self)->tp_free((PyObject*)self);
+        PyObject_Del(self);
       }
 
 
@@ -1466,14 +1468,14 @@ namespace triton {
       #endif
 
 
-      static int AstContext_init(AstNode_Object *self, PyObject *args, PyObject *kwds) {
-        return 0;
-      }
+      //static int AstContext_init(AstNode_Object *self, PyObject *args, PyObject *kwds) {
+      //  return 0;
+      //}
 
 
-      static PyObject* AstContext_new(PyTypeObject* type, PyObject* args, PyObject* kwds) {
-        return type->tp_alloc(type, 0);
-      }
+      //static PyObject* AstContext_new(PyTypeObject* type, PyObject* args, PyObject* kwds) {
+      //  return type->tp_alloc(type, 0);
+      //}
 
 
       //! AstContext methods.
@@ -1575,9 +1577,9 @@ namespace triton {
         0,                                          /* tp_descr_get */
         0,                                          /* tp_descr_set */
         0,                                          /* tp_dictoffset */
-        (initproc)AstContext_init,                  /* tp_init */
+        0,//(initproc)AstContext_init,                  /* tp_init */
         0,                                          /* tp_alloc */
-        (newfunc)AstContext_new,                    /* tp_new */
+        0,//(newfunc)AstContext_new,                    /* tp_new */
         0,                                          /* tp_free */
         0,                                          /* tp_is_gc */
         0,                                          /* tp_bases */
@@ -1601,9 +1603,18 @@ namespace triton {
           return Py_None;
         }
 
+        //PyType_Ready(&AstContext_Type);
+        //auto* object = (triton::bindings::python::AstContext_Object*)PyObject_CallObject((PyObject*)&AstContext_Type, nullptr);
+        //if (object != NULL) {
+        //  object->ctxt = ctxt;
+        //}
+
+        AstContext_Object* object;
+
         PyType_Ready(&AstContext_Type);
-        auto* object = (triton::bindings::python::AstContext_Object*)PyObject_CallObject((PyObject*)&AstContext_Type, nullptr);
+        object = PyObject_NEW(AstContext_Object, &AstContext_Type);
         if (object != NULL) {
+          new (&object->ctxt) std::shared_ptr<triton::ast::AstContext>();
           object->ctxt = ctxt;
         }
 
