@@ -31,10 +31,12 @@ namespace triton {
       /* Tell to the thread that we are going to dead */
       this->end = true;
 
+      #if !defined(IS_PINTOOL)
       /* waits for the thread to finish its execution */
       if (this->t.joinable()) {
         t.join();
       }
+      #endif
 
       this->releaseAll();
     }

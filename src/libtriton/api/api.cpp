@@ -230,8 +230,9 @@ namespace triton {
     this->modes   = std::make_shared<triton::modes::Modes>();
     this->astCtxt = std::make_shared<triton::ast::AstContext>(this->modes);
 
-    if (triton::gc::gcInstance != nullptr)
+    if (triton::gc::gcInstance != nullptr) {
       delete triton::gc::gcInstance;
+    }
 
     triton::gc::gcInstance = new triton::gc::GarbageCollector();
   }
