@@ -34,7 +34,7 @@ namespace triton {
       #if !defined(IS_PINTOOL)
       /* waits for the thread to finish its execution */
       if (this->t.joinable()) {
-        t.join();
+        this->t.join();
       }
       #endif
 

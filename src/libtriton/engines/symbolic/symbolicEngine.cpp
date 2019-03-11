@@ -73,7 +73,9 @@ namespace triton {
         this->pathConstraints.clear();
 
         /* Removes all shared_ptr garbages */
+        #if !defined(IS_PINTOOL)
         triton::gc::gcInstance->releaseAll();
+        #endif
       }
 
 

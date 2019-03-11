@@ -37,7 +37,9 @@ namespace triton {
 
 
     AbstractNode::~AbstractNode() {
+      #if !defined(IS_PINTOOL)
       (*(&triton::gc::gcInstance))->collect(this);
+      #endif
     }
 
 

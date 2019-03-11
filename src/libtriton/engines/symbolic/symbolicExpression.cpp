@@ -48,7 +48,9 @@ namespace triton {
 
 
       SymbolicExpression::~SymbolicExpression() {
+      #if !defined(IS_PINTOOL)
       (*(&triton::gc::gcInstance))->collect(this);
+      #endif
       }
 
 
