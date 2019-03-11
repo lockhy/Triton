@@ -48,7 +48,7 @@ namespace triton {
 
 
       SymbolicExpression::~SymbolicExpression() {
-        triton::gc::gcInstance->collect(this);
+      (*(&triton::gc::gcInstance))->collect(this);
       }
 
 
