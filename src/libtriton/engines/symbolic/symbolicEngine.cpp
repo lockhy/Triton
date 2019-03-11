@@ -70,6 +70,7 @@ namespace triton {
         this->memoryReference.clear();
         this->symbolicReg.clear();
         this->pathConstraints.clear();
+        triton::gc::gcInstance.releaseAll();
       }
 
 
