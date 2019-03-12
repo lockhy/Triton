@@ -76,8 +76,8 @@ namespace triton {
         //! Releases garbages until there is nothing to release anymore.
         TRITON_EXPORT void releaseAll(void);
 
-        //! Releases the current collected garbages.
-        TRITON_EXPORT void release(void);
+        //! Releases the current collected garbages. Returns true if garbages were been released.
+        TRITON_EXPORT bool release(void);
 
         //! Allows threads
         TRITON_EXPORT void allowThread(bool state);

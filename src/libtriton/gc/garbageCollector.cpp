@@ -17,7 +17,7 @@ namespace triton {
 
     GarbageCollector::GarbageCollector() {
       this->limit = 1000;
-      this->threadAllowed = true;
+      this->threadAllowed = false;
     }
 
 
@@ -98,29 +98,18 @@ namespace triton {
 
 
     void GarbageCollector::releaseAll(void) {
-      bool stop = false;
-
       /*
        * This part of the code is processed in order to release garbages
        * until there is nothing to release anymore.
        */
-      while (stop == false) {
-        stop = true;
-        while (this->expressions.size()) {
-          this->release();
-          stop = false;
-        }
-        while (this->nodes.size()) {
-          this->release();
-          stop = false;
-        }
-      }
+      while (this->release());
     }
 
 
-    void GarbageCollector::release(void) {
+    bool GarbageCollector::release(void) {
       std::set<triton::ast::SharedAbstractNode> garbageNodes;
       std::set<triton::engines::symbolic::SharedSymbolicExpression> garbageExpressions;
+      bool released = false;
 
       this->m1.lock();
       std::swap(garbageNodes, this->nodes);
@@ -133,8 +122,12 @@ namespace triton {
       //std::cout << "Release " << garbageNodes.size() << " nodes" << std::endl;
       //std::cout << "Release " << garbageExpressions.size() << " expressions" << std::endl;
 
+      released = (garbageNodes.size() || garbageExpressions.size());
+
       garbageNodes.clear();
       garbageExpressions.clear();
+
+      return released;
     }
 
 
