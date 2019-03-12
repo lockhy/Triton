@@ -229,14 +229,6 @@ namespace triton {
   API::API() : callbacks(*this), arch(&this->callbacks) {
     this->modes   = std::make_shared<triton::modes::Modes>();
     this->astCtxt = std::make_shared<triton::ast::AstContext>(this->modes);
-
-    //#if !defined(IS_PINTOOL)
-    //if (triton::gc::gcInstance != nullptr) {
-    //  delete triton::gc::gcInstance;
-    //}
-
-    //triton::gc::gcInstance = new triton::gc::GarbageCollector();
-    //#endif
   }
 
 
@@ -486,11 +478,6 @@ namespace triton {
 
     // Clean up the registers shortcut
     this->registers.clear();
-
-    //// Release garbages
-    //#if !defined(IS_PINTOOL)
-    //triton::gc::gcInstance->releaseAll();
-    //#endif
   }
 
 

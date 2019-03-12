@@ -136,7 +136,6 @@ namespace triton {
       void SymbolicExpression_dealloc(PyObject* self) {
         std::cout << std::flush;
         PySymbolicExpression_AsSymbolicExpression(self) = nullptr; // decref the shared_ptr
-        //Py_TYPE(self)->tp_free((PyObject*)self);
         PyObject_Del(self);
       }
 
@@ -302,16 +301,6 @@ namespace triton {
       }
 
 
-      //static int SymbolicExpression_init(AstNode_Object *self, PyObject *args, PyObject *kwds) {
-      //  return 0;
-      //}
-
-
-      //static PyObject* SymbolicExpression_new(PyTypeObject* type, PyObject* args, PyObject* kwds) {
-      //  return type->tp_alloc(type, 0);
-      //}
-
-
       //! SymbolicExpression methods.
       PyMethodDef SymbolicExpression_callbacks[] = {
         {"getAst",            SymbolicExpression_getAst,            METH_NOARGS,    ""},
@@ -366,9 +355,9 @@ namespace triton {
         0,                                          /* tp_descr_get */
         0,                                          /* tp_descr_set */
         0,                                          /* tp_dictoffset */
-        0,//(initproc)SymbolicExpression_init,          /* tp_init */
+        0,                                          /* tp_init */
         0,                                          /* tp_alloc */
-        0,//(newfunc)SymbolicExpression_new,            /* tp_new */
+        0,                                          /* tp_new */
         0,                                          /* tp_free */
         0,                                          /* tp_is_gc */
         0,                                          /* tp_bases */
@@ -391,12 +380,6 @@ namespace triton {
           Py_INCREF(Py_None);
           return Py_None;
         }
-
-        //PyType_Ready(&SymbolicExpression_Type);
-        //auto* object = (triton::bindings::python::SymbolicExpression_Object*)PyObject_CallObject((PyObject*)&SymbolicExpression_Type, nullptr);
-        //if (object != NULL) {
-        //  object->symExpr = symExpr;
-        //}
 
         SymbolicExpression_Object* object;
 

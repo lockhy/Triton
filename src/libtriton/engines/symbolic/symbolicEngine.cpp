@@ -64,21 +64,6 @@ namespace triton {
       }
 
 
-      SymbolicEngine::~SymbolicEngine() {
-        ///* Clear all shared_ptr dependencies */
-        //this->astCtxt->clear();
-        //this->alignedMemoryReference.clear();
-        //this->memoryReference.clear();
-        //this->symbolicReg.clear();
-        //this->pathConstraints.clear();
-
-        ///* Removes all shared_ptr garbages */
-        //#if !defined(IS_PINTOOL)
-        //triton::gc::gcInstance->releaseAll();
-        //#endif
-      }
-
-
       SymbolicEngine& SymbolicEngine::operator=(const SymbolicEngine& other) {
         triton::engines::symbolic::SymbolicSimplification::operator=(other);
         triton::engines::symbolic::PathManager::operator=(other);

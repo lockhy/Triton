@@ -140,7 +140,6 @@ namespace triton {
       void AstNode_dealloc(PyObject* self) {
         std::cout << std::flush;
         PyAstNode_AsAstNode(self) = nullptr; // decref the shared_pt
-        //Py_TYPE(self)->tp_free((PyObject*)self);
         PyObject_Del(self);
       }
 
@@ -780,16 +779,6 @@ namespace triton {
       }
 
 
-      //static int AstNode_init(AstNode_Object* self, PyObject* args, PyObject* kwds) {
-      //  return 0;
-      //}
-
-
-      //static PyObject* AstNode_new(PyTypeObject* type, PyObject* args, PyObject* kwds) {
-      //  return type->tp_alloc(type, 0);
-      //}
-
-
       //! AstNode methods.
       PyMethodDef AstNode_callbacks[] = {
         {"equalTo",                 AstNode_equalTo,                METH_O,          ""},
@@ -908,9 +897,9 @@ namespace triton {
         0,                                          /* tp_descr_get */
         0,                                          /* tp_descr_set */
         0,                                          /* tp_dictoffset */
-        0,//(initproc)AstNode_init,                     /* tp_init */
+        0,                                          /* tp_init */
         0,                                          /* tp_alloc */
-        0,//(newfunc)AstNode_new,                       /* tp_new */
+        0,                                          /* tp_new */
         0,                                          /* tp_free */
         0,                                          /* tp_is_gc */
         0,                                          /* tp_bases */
@@ -933,16 +922,6 @@ namespace triton {
           Py_INCREF(Py_None);
           return Py_None;
         }
-
-        //PyType_Ready(&AstNode_Type);
-        //// Build the new object the python way (calling operator() on the type) as
-        //// it crash otherwise (certainly due to incorrect shared_ptr initialization).
-        //auto* object = (triton::bindings::python::AstNode_Object*)PyObject_CallObject((PyObject*) &AstNode_Type, nullptr);
-        //if (object != NULL) {
-        //  object->node = node;
-        //}
-
-        //return (PyObject*)object;
 
         AstNode_Object* object;
 

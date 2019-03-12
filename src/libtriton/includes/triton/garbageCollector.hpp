@@ -80,11 +80,6 @@ namespace triton {
         TRITON_EXPORT void release(void);
     };
 
-    //! The global garbage collector instance used while the library is alive.
-    //#if !defined(IS_PINTOOL)
-    //extern GarbageCollector* gcInstance;
-    //#endif
-
   /*! @} End of gc namespace */
   };
 /*! @} End of triton namespace */
