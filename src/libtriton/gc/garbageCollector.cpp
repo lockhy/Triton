@@ -65,35 +65,35 @@ namespace triton {
 
 
     void GarbageCollector::collect(triton::engines::symbolic::SymbolicExpression* expr) {
-      std::list<triton::ast::SharedAbstractNode> W{expr->getAst()};
+      //std::list<triton::ast::SharedAbstractNode> W{std::move(expr->getAst())};
 
-      /* Collect garbages */
-      while (!W.empty()) {
-        auto& node = W.back();
-        W.pop_back();
+      ///* Collect garbages */
+      //while (!W.empty()) {
+      //  auto& node = W.back();
+      //  W.pop_back();
 
-        for (auto&& n : node->getChildren())
-          W.push_back(n);
+      //  for (auto&& n : node->getChildren())
+      //    W.push_back(n);
 
-        if (node->getType() == triton::ast::REFERENCE_NODE) {
-          const auto& expr = reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression();
-          if (expr.use_count() == 1) {
-            this->m2.lock();
-            this->expressions.insert(expr);
-            this->m2.unlock();
-          }
-        }
-      }
+      //  if (node->getType() == triton::ast::REFERENCE_NODE) {
+      //    const auto& expr = reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression();
+      //    if (expr.use_count() == 1) {
+      //      this->m2.lock();
+      //      this->expressions.insert(expr);
+      //      this->m2.unlock();
+      //    }
+      //  }
+      //}
 
-      /* Release garbages */
-      if ((this->expressions.size() >= this->limit || this->nodes.size() >= this->limit) && this->t.joinable() == false) {
-        if (this->threadAllowed == true) {
-          this->t = std::thread(&GarbageCollector::releaseAll, this);
-        }
-        else {
-          this->releaseAll();
-        }
-      }
+      ///* Release garbages */
+      //if ((this->expressions.size() >= this->limit || this->nodes.size() >= this->limit) && this->t.joinable() == false) {
+      //  if (this->threadAllowed == true) {
+      //    this->t = std::thread(&GarbageCollector::releaseAll, this);
+      //  }
+      //  else {
+      //    this->releaseAll();
+      //  }
+      //}
     }
 
 
