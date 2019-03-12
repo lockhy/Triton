@@ -37,6 +37,7 @@ namespace triton {
 
 
     AbstractNode::~AbstractNode() {
+      this->ctxt->gc.collect(this);
     }
 
 
