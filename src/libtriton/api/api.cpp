@@ -7,7 +7,6 @@
 
 #include <triton/api.hpp>
 #include <triton/exceptions.hpp>
-#include <triton/garbageCollector.hpp>
 
 #include <list>
 #include <map>

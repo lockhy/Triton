@@ -16,6 +16,7 @@
 #include <triton/astRepresentation.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/exceptions.hpp>
+#include <triton/garbageCollector.hpp>
 #include <triton/modes.hpp>
 
 
@@ -60,6 +61,9 @@ namespace triton {
         std::map<std::string, std::pair<triton::ast::SharedAbstractNode, triton::uint512>> valueMapping;
 
       public:
+        //! Garbage collector
+        triton::gc::GarbageCollector gc;
+
         //! Constructor
         TRITON_EXPORT AstContext(const triton::modes::SharedModes& modes);
 

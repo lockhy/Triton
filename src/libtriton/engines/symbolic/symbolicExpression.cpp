@@ -8,7 +8,6 @@
 #include <iosfwd>
 #include <string>
 #include <sstream>
-#include <algorithm>
 
 #include <triton/ast.hpp>
 #include <triton/astContext.hpp>

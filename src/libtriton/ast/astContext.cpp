@@ -28,6 +28,7 @@ namespace triton {
         modes(other.modes),
         astRepresentation(other.astRepresentation),
         valueMapping(other.valueMapping) {
+      /* Init a new GC instance */
     }
 
 
@@ -38,9 +39,13 @@ namespace triton {
 
     AstContext& AstContext::operator=(const AstContext& other) {
       std::enable_shared_from_this<AstContext>::operator=(other);
+
       this->astRepresentation = other.astRepresentation;
-      this->modes = other.modes;
-      this->valueMapping = other.valueMapping;
+      this->modes             = other.modes;
+      this->valueMapping      = other.valueMapping;
+
+      /* Keep the current GC instance */
+
       return *this;
     }
 
