@@ -16,36 +16,27 @@ namespace triton {
   namespace gc {
 
     GarbageCollector::GarbageCollector() {
-      this->end = false;
-      #if !defined(IS_PINTOOL)
-      this->t = std::thread(&GarbageCollector::threadRelease, this);
-      #endif
+      this->limit = 1000;
+      this->threadAllowed = true;
     }
 
 
     GarbageCollector::~GarbageCollector() {
-      /* Tell to the thread that we are going to dead */
-      this->end = true;
-
-      #if !defined(IS_PINTOOL)
-      /* waits for the thread to finish its execution */
       if (this->t.joinable()) {
         this->t.join();
       }
-      #endif
-
       this->releaseAll();
     }
 
 
     void GarbageCollector::collect(triton::ast::AbstractNode* node) {
-      #if !defined(IS_PINTOOL)
       std::list<triton::ast::SharedAbstractNode> W;
 
       for (auto&& n : node->getChildren()) {
         W.push_back(n);
       }
 
+      /* Collect garbages */
       while (!W.empty()) {
         auto& node = W.back();
         W.pop_back();
@@ -60,14 +51,23 @@ namespace triton {
           this->m1.unlock();
         }
       }
-      #endif
+
+      /* Release garbages */
+      if ((this->expressions.size() >= this->limit || this->nodes.size() >= this->limit) && this->t.joinable() == false) {
+        if (this->threadAllowed == true) {
+          this->t = std::thread(&GarbageCollector::releaseAll, this);
+        }
+        else {
+          this->releaseAll();
+        }
+      }
     }
 
 
     void GarbageCollector::collect(triton::engines::symbolic::SymbolicExpression* expr) {
-      #if !defined(IS_PINTOOL)
       std::list<triton::ast::SharedAbstractNode> W{expr->getAst()};
 
+      /* Collect garbages */
       while (!W.empty()) {
         auto& node = W.back();
         W.pop_back();
@@ -84,15 +84,15 @@ namespace triton {
           }
         }
       }
-      #endif
-    }
 
-
-    void GarbageCollector::threadRelease(void) {
-      /* This loop is processed in a thread while GarbageCollector is alive */
-      while (this->end == false) {
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        this->releaseAll();
+      /* Release garbages */
+      if ((this->expressions.size() >= this->limit || this->nodes.size() >= this->limit) && this->t.joinable() == false) {
+        if (this->threadAllowed == true) {
+          this->t = std::thread(&GarbageCollector::releaseAll, this);
+        }
+        else {
+          this->releaseAll();
+        }
       }
     }
 
@@ -135,6 +135,11 @@ namespace triton {
 
       garbageNodes.clear();
       garbageExpressions.clear();
+    }
+
+
+    void GarbageCollector::allowThread(bool state) {
+      this->threadAllowed = state;
     }
 
   }; /* gc namespace */

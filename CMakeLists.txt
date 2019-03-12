@@ -182,7 +182,6 @@ include_directories("${Boost_INCLUDE_DIRS}")
 
 # Use the same ABI as pin
 if(PINTOOL)
-    add_definitions(-DIS_PINTOOL)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_GLIBCXX_USE_CXX11_ABI=0")
 endif()
 

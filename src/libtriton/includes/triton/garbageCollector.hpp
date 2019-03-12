@@ -48,11 +48,11 @@ namespace triton {
         //! Internal thread to release garbages.
         std::thread t;
 
-        //! This flag is false while GarbageCollector is alive. ~GarbageCollector sets this flag to true.
-        std::atomic<bool> end;
+        //! The limit of gargabes until the release of them.
+        triton::uint32 limit;
 
-        //! Releases garbages in a thread while GarbageCollector is alive.
-        void threadRelease(void);
+        //! True if threads are allowed. Some DBI like Pin does not like threads...
+        bool threadAllowed;
 
       public:
         //! The list of AbstractNode which must be deleted.
@@ -73,11 +73,14 @@ namespace triton {
         //! Collects an SymbolicExpression.
         TRITON_EXPORT void collect(triton::engines::symbolic::SymbolicExpression* expr);
 
-        //! Release garbages until there is nothing to release anymore.
+        //! Releases garbages until there is nothing to release anymore.
         TRITON_EXPORT void releaseAll(void);
 
         //! Releases the current collected garbages.
         TRITON_EXPORT void release(void);
+
+        //! Allows threads
+        TRITON_EXPORT void allowThread(bool state);
     };
 
   /*! @} End of gc namespace */

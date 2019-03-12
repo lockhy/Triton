@@ -47,6 +47,7 @@ namespace triton {
 
 
       SymbolicExpression::~SymbolicExpression() {
+        this->ast->getContext()->gc.collect(this);
       }
 
 

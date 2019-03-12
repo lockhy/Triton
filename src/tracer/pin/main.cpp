@@ -687,6 +687,9 @@ namespace tracer {
       tracer::pintool::api.addCallback(tracer::pintool::context::needConcreteRegisterValue);
       tracer::pintool::api.addCallback(tracer::pintool::context::needConcreteMemoryValue);
 
+      /* Pin does not like thread into pintool */
+      tracer::pintool::api.getAstContext()->gc.allowThread(false);
+
       /* Image callback */
       IMG_AddInstrumentFunction(IMG_Instrumentation, nullptr);
 
