@@ -86,7 +86,8 @@ namespace triton {
       void SymbolicVariable_dealloc(PyObject* self) {
         std::cout << std::flush;
         PySymbolicVariable_AsSymbolicVariable(self) = nullptr; // decref the shared_ptr
-        Py_TYPE(self)->tp_free((PyObject*)self);
+        //Py_TYPE(self)->tp_free((PyObject*)self);
+        PyObject_Del(self);
       }
 
 
@@ -206,14 +207,14 @@ namespace triton {
       }
 
 
-      static int SymbolicVariable_init(AstNode_Object* self, PyObject* args, PyObject* kwds) {
-        return 0;
-      }
+      //static int SymbolicVariable_init(AstNode_Object* self, PyObject* args, PyObject* kwds) {
+      //  return 0;
+      //}
 
 
-      static PyObject* SymbolicVariable_new(PyTypeObject* type, PyObject* args, PyObject* kwds) {
-        return type->tp_alloc(type, 0);
-      }
+      //static PyObject* SymbolicVariable_new(PyTypeObject* type, PyObject* args, PyObject* kwds) {
+      //  return type->tp_alloc(type, 0);
+      //}
 
 
       //! SymbolicVariable methods.
@@ -267,9 +268,9 @@ namespace triton {
         0,                                          /* tp_descr_get */
         0,                                          /* tp_descr_set */
         0,                                          /* tp_dictoffset */
-        (initproc)SymbolicVariable_init,            /* tp_init */
+        0,//(initproc)SymbolicVariable_init,            /* tp_init */
         0,                                          /* tp_alloc */
-        (newfunc)SymbolicVariable_new,              /* tp_new */
+        0,//(newfunc)SymbolicVariable_new,              /* tp_new */
         0,                                          /* tp_free */
         0,                                          /* tp_is_gc */
         0,                                          /* tp_bases */
@@ -277,7 +278,7 @@ namespace triton {
         0,                                          /* tp_cache */
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
-        0,                                          /* tp_del */
+        (destructor)SymbolicVariable_dealloc,       /* tp_del */
         #if IS_PY3
         0,                                          /* tp_version_tag */
         0,                                          /* tp_finalize */
@@ -293,11 +294,20 @@ namespace triton {
           return Py_None;
         }
 
+        //PyType_Ready(&SymbolicVariable_Type);
+        //// Build the new object the python way (calling operator() on the type) as
+        //// it crash otherwise (certainly due to incorrect shared_ptr initialization).
+        //auto* object = (triton::bindings::python::SymbolicVariable_Object*)PyObject_CallObject((PyObject*)&SymbolicVariable_Type, nullptr);
+        //if (object != NULL) {
+        //  object->symVar = symVar;
+        //}
+
+        SymbolicVariable_Object* object;
+
         PyType_Ready(&SymbolicVariable_Type);
-        // Build the new object the python way (calling operator() on the type) as
-        // it crash otherwise (certainly due to incorrect shared_ptr initialization).
-        auto* object = (triton::bindings::python::SymbolicVariable_Object*)PyObject_CallObject((PyObject*)&SymbolicVariable_Type, nullptr);
+        object = PyObject_NEW(SymbolicVariable_Object, &SymbolicVariable_Type);
         if (object != NULL) {
+          new (&object->symVar) std::shared_ptr<triton::engines::symbolic::SymbolicVariable>();
           object->symVar = symVar;
         }
 
