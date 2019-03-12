@@ -15,10 +15,10 @@
 namespace triton {
   namespace gc {
 
-    /* The global garbage collector instance used while the library is alive. */
-    #if !defined(IS_PINTOOL)
-    GarbageCollector* gcInstance;
-    #endif
+    ///* The global garbage collector instance used while the library is alive. */
+    //#if !defined(IS_PINTOOL)
+    //GarbageCollector* gcInstance;
+    //#endif
 
 
     GarbageCollector::GarbageCollector() {
