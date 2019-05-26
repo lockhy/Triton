@@ -89,6 +89,8 @@ environment:
       Z3_PKG_NAME: z3-4.6.0-x64-win
 
 install:
+  - cmd: echo "Path is "
+  - cmd: echo %PATH%
   - set PATH=%PYTHON%;%PATH%
   - cmd: cd C:\projects\triton
   - cmd: mkdir build
