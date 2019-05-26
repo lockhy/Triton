@@ -16,7 +16,6 @@ environment:
   CAPSTONE_INCLUDE_DIRS: c:\projects\triton\build\capstone-4.0.1\include\capstone
 
   matrix:
-    - cmd: echo "1 "
     - platform: x64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       BOOST_ROOT: c:\Libraries\boost_1_62_0
