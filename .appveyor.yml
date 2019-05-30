@@ -30,8 +30,6 @@ environment:
 
   
 install:
-  - cmd: echo "Path is "
-  - cmd: echo %PATH%
   - set PATH=%PYTHON%;%PATH%
   - cmd: cd C:\projects\triton
   - cmd: mkdir build
