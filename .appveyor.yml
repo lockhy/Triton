@@ -15,8 +15,9 @@ clone_folder: c:\projects\triton
 environment:
   CAPSTONE_INCLUDE_DIRS: c:\projects\triton\build\capstone-4.0.1\include\capstone
   PINTOOL: c:\pin\source\tools
-
-  - platform: Win32
+  
+  matrix:
+    - platform: Win32
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       BOOST_ROOT: c:\Libraries\boost_1_62_0
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\%configuration%\capstone.lib
